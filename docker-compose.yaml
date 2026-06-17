@@ -1,0 +1,93 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ayo-example
+
+    restart: unless-stopped
+
+    environment:
+      APP_ENV: production
+
+      APP_PORT: 8080
+
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: sampledb
+
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+    depends_on:
+      - postgres
+      - redis
+
+    expose:
+      - "8080"
+
+    networks:
+      - backend
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: sample-postgres
+
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: sampledb
+
+    ports:
+      - "5433:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # - ./files/main.sql:/docker-entrypoint-initdb.d/main.sql
+
+    networks:
+      - backend
+
+  redis:
+    image: redis:7-alpine
+    container_name: sample-redis
+
+    restart: unless-stopped
+
+    ports:
+      - "6379:6379"
+
+    volumes:
+      - redis_data:/data
+
+    networks:
+      - backend
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: sample-nginx
+
+    restart: unless-stopped
+
+    depends_on:
+      - app
+
+    ports:
+      - "8282:80"
+
+    volumes:
+      - ./files/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+
+    networks:
+      - backend
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  backend:
