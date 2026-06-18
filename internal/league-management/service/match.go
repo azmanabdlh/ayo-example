@@ -28,6 +28,11 @@ func New(db *gorm.DB) *LeagueManagement {
 }
 
 func (l *LeagueManagement) AssignMatchPlayerLineup(ctx context.Context, matchID int64, req dtos.MatchPlayerParam) error {
+	const maxPlayerLineup = 20
+
+	if len(req.Lineup) > maxPlayerLineup {
+		return errors.New("match player lineup to much")
+	}
 
 	match, err := gorm.G[model.Match](l.db).
 		Where("id = ? ", matchID).
