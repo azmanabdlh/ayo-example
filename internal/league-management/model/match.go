@@ -203,8 +203,10 @@ type MatchPlayerLineup struct {
 	Team   teamManagement.Team
 	TeamID int64 `gorm:"foreignKey:TeamID"`
 
-	PositionSlot string // ["ST", "GK", "CB-L"]
-	IsStarter    bool
+	// ["ST", "GK", "CB-L"]
+	PositionSlot string `gorm:"uniqueIndex"`
+
+	IsStarter bool `gorm:"uniqueIndex"`
 
 	MinuteIn  int
 	MinuteOut int

@@ -9,8 +9,8 @@ import (
 type User struct {
 	gorm.Model
 
-	ID           int64 `gorm:"primaryKey"`
-	Email        string
+	ID           int64  `gorm:"primaryKey"`
+	Email        string `gorm:"uniqueIndex"`
 	PasswordHash string
 
 	CreatedAt time.Time
