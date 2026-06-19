@@ -10,13 +10,15 @@ services:
     environment:
       APP_ENV: production
 
-      APP_PORT: 8080
+      PORT: 8080
 
       DB_HOST: postgres
       DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_NAME: sampledb
+
+      DATABASE_URL=
 
       REDIS_HOST: redis
       REDIS_PORT: 6379

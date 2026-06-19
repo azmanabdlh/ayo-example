@@ -24,18 +24,22 @@ func New() (*Config, error) {
 
 func newConfig() *Config {
 
-	dbDSN := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_NAME"),
-		os.Getenv("DB_PORT"),
-	)
+	dbDSN := os.Getenv("DATABASE_URL")
+
+	if dbDSN == "" {
+		dbDSN = fmt.Sprintf(
+			"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+			os.Getenv("DB_HOST"),
+			os.Getenv("DB_USER"),
+			os.Getenv("DB_PASSWORD"),
+			os.Getenv("DB_NAME"),
+			os.Getenv("DB_PORT"),
+		)
+	}
 
 	return &Config{
 		Server: Server{
-			Address: os.Getenv("APP_PORT"),
+			Address: os.Getenv("PORT"),
 		},
 		Database: Database{
 			DSN: dbDSN,
