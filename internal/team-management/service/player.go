@@ -79,6 +79,7 @@ func (t *TeamManagement) FindPlayer(ctx context.Context, playerID int64) (player
 	g := t.db.
 		Preload("Team").
 		Preload("PlayerMember").
+		Preload("PlayerMember.Team").
 		Where("id = ? ", playerID).
 		First(&player)
 

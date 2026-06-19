@@ -37,9 +37,14 @@ func newConfig() *Config {
 		)
 	}
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
 	return &Config{
 		Server: Server{
-			Address: os.Getenv("PORT"),
+			Address: port,
 		},
 		Database: Database{
 			DSN: dbDSN,

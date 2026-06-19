@@ -2,7 +2,6 @@
 
 Ayo Example adalah aplikasi backend REST API untuk manajemen tim, pemain, dan pertandingan liga.
 
-
 Proyek ini telah dideploy ke Railway — akses API di: https://ayo-example-production.up.railway.app/api
 
 ![Ayo Example](cover.png)

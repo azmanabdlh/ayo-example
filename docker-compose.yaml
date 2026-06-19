@@ -18,7 +18,7 @@ services:
       DB_PASSWORD: postgres
       DB_NAME: sampledb
 
-      DATABASE_URL=
+      # DATABASE_URL:
 
       REDIS_HOST: redis
       REDIS_PORT: 6379

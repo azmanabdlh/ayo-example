@@ -7,25 +7,23 @@ import (
 )
 
 type Player struct {
-	gorm.Model
+	ID         int64  `json:"id,omitempty" gorm:"primaryKey"`
+	Name       string `json:"name,omitempty"`
+	Height     int    `json:"height,omitempty"`
+	Weight     int    `json:"weight,omitempty"`
+	Position   string `json:"position,omitempty"`
+	BackNumber int    `json:"back_number,omitempty"`
 
-	ID         int64 `gorm:"primaryKey"`
-	Name       string
-	Height     int
-	Weight     int
-	Position   string
-	BackNumber int
-
-	TeamID int64
+	TeamID int64 `json:"team_id,omitempty"`
 
 	// relations
-	Team         Team           `gorm:"foreignKey:TeamID"`
-	PlayerMember []PlayerMember `gorm:"constraint:OnDelete:CASCADE"`
+	Team         Team           `json:"team,omitempty" gorm:"foreignKey:TeamID"`
+	PlayerMember []PlayerMember `json:"player_memberships,omitempty" gorm:"foreignKey:PlayerID;constraint:OnDelete:CASCADE"`
 
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
 
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 }
 
 func (p *Player) IsMemberOf(teamID int64) bool {
@@ -33,20 +31,18 @@ func (p *Player) IsMemberOf(teamID int64) bool {
 }
 
 type PlayerMember struct {
-	gorm.Model
+	ID               int64     `gorm:"primaryKey"`
+	PlayerID         int64     `json:"player_id"`
+	PlayerBackNumber int       `json:"player_back_number"`
+	TeamID           int64     `json:"team_id"`
+	JoinedAt         time.Time `json:"joined_at"`
+	LeftAt           time.Time `json:"left_at"`
 
-	ID               int64 `gorm:"primaryKey"`
-	PlayerID         int64
-	PlayerBackNumber int
-	TeamID           int64
-	JoinedAt         time.Time
-	LeftAt           time.Time
+	Player Player `json:"player,omitempty" gorm:"foreignKey:PlayerID"`
+	Team   Team   `json:"team,omitempty" gorm:"foreignKey:TeamID"`
 
-	Player Player `gorm:"foreignKey:PlayerID"`
-	Team   Team   `gorm:"foreignKey:TeamID"`
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
 
-	CreatedAt time.Time
-	UpdatedAt time.Time
-
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 }

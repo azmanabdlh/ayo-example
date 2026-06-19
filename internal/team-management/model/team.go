@@ -7,19 +7,17 @@ import (
 )
 
 type Team struct {
-	gorm.Model
+	ID          int64  `json:"id,omitempty" gorm:"primaryKey"`
+	Name        string `json:"name,omitempty" gorm:"not null"`
+	LogoURL     string `json:"logo_url,omitempty"`
+	FoundedYear int    `json:"founded_year,omitempty"`
+	Address     string `json:"address,omitempty"`
+	City        string `json:"city,omitempty"`
 
-	ID          int64  `gorm:"primaryKey"`
-	Name        string `gorm:"not null"`
-	LogoURL     string
-	FoundedYear int
-	Address     string
-	City        string
+	Player []Player `json:"players,omitempty" gorm:"constraint:OnDelete:CASCADE"`
 
-	Player []Player `gorm:"constraint:OnDelete:CASCADE"`
-
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt time.Time      `json:"created_at,omitempty"`
+	UpdatedAt time.Time      `json:"updated_at,omitempty"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
