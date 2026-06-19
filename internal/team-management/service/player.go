@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func (t *TeamManagement) AssignPlayerTeam(ctx context.Context, playerID, teamID int64) error {
+func (t *TeamManagement) AssignPlayerTeam(ctx context.Context, playerID, teamID int64, newBackNumber int) error {
 
 	player := model.Player{}
 
@@ -61,9 +61,10 @@ func (t *TeamManagement) AssignPlayerTeam(ctx context.Context, playerID, teamID 
 		}
 
 		err = gorm.G[model.PlayerMember](tx).Create(ctx, &model.PlayerMember{
-			PlayerID: playerID,
-			TeamID:   teamID,
-			JoinedAt: now,
+			PlayerID:         playerID,
+			TeamID:           teamID,
+			JoinedAt:         now,
+			PlayerBackNumber: newBackNumber,
 		})
 		if err != nil {
 			return err

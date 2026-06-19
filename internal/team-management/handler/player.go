@@ -11,8 +11,9 @@ import (
 
 func (h *Handler) AssignPlayerToTeam(c *gin.Context) {
 	req := struct {
-		PlayerID int64 `json:"player_id"`
-		TeamID   int64 `json:"team_id"`
+		PlayerID   int64 `json:"player_id"`
+		TeamID     int64 `json:"team_id"`
+		BackNumber int   `json:"back_number"`
 	}{}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -26,7 +27,7 @@ func (h *Handler) AssignPlayerToTeam(c *gin.Context) {
 		return
 	}
 
-	err := h.svc.AssignPlayerTeam(c.Request.Context(), req.PlayerID, req.TeamID)
+	err := h.svc.AssignPlayerTeam(c.Request.Context(), req.PlayerID, req.TeamID, req.BackNumber)
 	if err != nil {
 		logger.Info("error assign player to team json: %v", req)
 

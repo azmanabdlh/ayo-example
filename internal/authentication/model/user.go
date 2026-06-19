@@ -9,14 +9,14 @@ import (
 type User struct {
 	gorm.Model
 
-	ID           int64  `gorm:"primaryKey"`
-	Email        string `gorm:"uniqueIndex"`
-	PasswordHash string
+	ID           int64  `json:"id,omitempty" gorm:"primaryKey"`
+	Email        string `json:"email,omitempty" gorm:"uniqueIndex"`
+	PasswordHash string `json:"password_hash,omitempty"`
 
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
 
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 }
 
 func New(db *gorm.DB) {

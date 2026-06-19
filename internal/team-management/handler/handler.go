@@ -20,7 +20,7 @@ type Service interface {
 	Remove(ctx context.Context, teamID int64) error
 
 	// player
-	AssignPlayerTeam(ctx context.Context, playerID, teamID int64) error
+	AssignPlayerTeam(ctx context.Context, playerID, teamID int64, newBackNumber int) error
 	FindPlayer(ctx context.Context, playerID int64) (model.Player, error)
 	RemovePlayer(ctx context.Context, playerID int64) error
 }

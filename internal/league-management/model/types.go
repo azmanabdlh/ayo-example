@@ -9,18 +9,18 @@ import (
 type Venue struct {
 	gorm.Model
 
-	ID uint `gorm:"primaryKey"`
+	ID uint `json:"id,omitempty" gorm:"primaryKey"`
 
-	Name          string
-	Address       string
-	City          string
-	GoogleMapsURL string
-	Capacity      int
+	Name          string `json:"name,omitempty"`
+	Address       string `json:"address,omitempty"`
+	City          string `json:"city,omitempty"`
+	GoogleMapsURL string `json:"google_maps_url,omitempty"`
+	Capacity      int    `json:"capacity,omitempty"`
 
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
 
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 }
 
 func New(db *gorm.DB) {

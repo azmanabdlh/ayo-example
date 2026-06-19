@@ -153,9 +153,9 @@ func (l *LeagueManagement) FindMatchHighlight(ctx context.Context, matchID int64
 		Preload("PlayerLineup").
 		Preload("Venue").
 		Preload("HomeTeam").
-		Preload("HomeTeam.Players").
+		Preload("HomeTeam.Player").
 		Preload("AwayTeam").
-		Preload("AwayTeam.Players").
+		Preload("AwayTeam.Player").
 		Preload("Goal").
 		First(&match, matchID).
 		Error
@@ -168,7 +168,14 @@ func (l *LeagueManagement) FindMatchHighlight(ctx context.Context, matchID int64
 		return highlight, err
 	}
 
-	return *match.ToMatchHighlight(), nil
+	res := match.ToMatchHighlight()
+	if res == nil {
+
+		return highlight, errors.New("invalid data")
+	}
+
+	highlight = *res
+	return highlight, nil
 }
 
 func (l *LeagueManagement) AddRecordGoal(ctx context.Context, matchID int64, req dtos.GoalParam) error {

@@ -31,12 +31,12 @@ func (p *Player) IsMemberOf(teamID int64) bool {
 }
 
 type PlayerMember struct {
-	ID               int64     `gorm:"primaryKey"`
-	PlayerID         int64     `json:"player_id"`
-	PlayerBackNumber int       `json:"player_back_number"`
-	TeamID           int64     `json:"team_id"`
-	JoinedAt         time.Time `json:"joined_at"`
-	LeftAt           time.Time `json:"left_at"`
+	ID               int64     `json:"id,omitempty" gorm:"primaryKey"`
+	PlayerID         int64     `json:"player_id,omitempty"`
+	PlayerBackNumber int       `json:"player_back_number,omitempty"`
+	TeamID           int64     `json:"team_id,omitempty"`
+	JoinedAt         time.Time `json:"joined_at,omitempty"`
+	LeftAt           time.Time `json:"left_at,omitempty"`
 
 	Player Player `json:"player,omitempty" gorm:"foreignKey:PlayerID"`
 	Team   Team   `json:"team,omitempty" gorm:"foreignKey:TeamID"`
