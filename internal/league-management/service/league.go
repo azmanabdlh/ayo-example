@@ -33,20 +33,20 @@ func (l *LeagueManagement) SubstitutePlayer(ctx context.Context, matchID int64, 
 		}
 	}
 
+	// current player lineup
+	matchPlayer, err := gorm.G[model.MatchPlayerLineup](l.db).
+		Where("player_id = ? ", req.PlayerID).
+		Where("team_id = ? ", req.TeamID).
+		Where("match_id = ? ", matchID).
+		First(ctx)
+	if err != nil {
+		return err
+	}
+
 	return l.db.Transaction(func(tx *gorm.DB) error {
 
-		// current player lineup
-		matchPlayer, err := gorm.G[model.MatchPlayerLineup](l.db).
-			Where("player_id = ? ", req.PlayerID).
-			Where("team_id = ? ", req.TeamID).
-			Where("match_id = ? ", matchID).
-			First(ctx)
-		if err != nil {
-			return err
-		}
-
 		// in
-		err = gorm.G[model.MatchPlayerLineup](l.db).
+		err = gorm.G[model.MatchPlayerLineup](tx).
 			Create(ctx, &model.MatchPlayerLineup{
 				MatchID:   matchID,
 				TeamID:    req.TeamID,
@@ -63,13 +63,13 @@ func (l *LeagueManagement) SubstitutePlayer(ctx context.Context, matchID int64, 
 		}
 
 		// out update
-		matchPlayer.IsStarter = false
-		matchPlayer.MinuteOut = req.Minute
-		matchPlayer.Reason = req.Reason
-		matchPlayer.SubstitutedForPlayerID = req.PlayerID
-
-		err = l.db.
-			Save(&matchPlayer).
+		err = tx.Model(&matchPlayer).
+			Updates(map[string]interface{}{
+				"is_starter":                false,
+				"minute_out":                req.Minute,
+				"reason":                    req.Reason,
+				"substituted_for_player_id": req.PlayerID,
+			}).
 			Error
 
 		return err

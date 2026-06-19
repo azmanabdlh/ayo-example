@@ -116,17 +116,13 @@ func (l *LeagueManagement) Finish(ctx context.Context, matchID int64) error {
 	}
 
 	if match.IsCancelled() || match.IsUpcoming() || match.IsFinished() {
-		return nil
+		return errors.New("invalid match phase")
 	}
 
 	// IsOngoing match to set finish
-	match.Phase = 3
-	g := l.db.Save(match)
-	if g.Error != nil {
-		return g.Error
-	}
-
-	return nil
+	return l.db.Model(&match).
+		Update("phase", 3).
+		Error
 }
 
 func (l *LeagueManagement) CreateMatch(ctx context.Context, matchParam dtos.MatchParam) error {
