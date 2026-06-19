@@ -142,7 +142,15 @@ func (h *Handler) CreateMatch(c *gin.Context) {
 }
 
 func (h *Handler) FindMatchHighlight(c *gin.Context) {
-	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+
+	if err != nil || id < 1 {
+		c.JSON(400, gin.H{
+			"message": "invalid match_id",
+		})
+
+		return
+	}
 
 	matchHighlight, err := h.svc.FindMatchHighlight(c.Request.Context(), id)
 	if err != nil {
