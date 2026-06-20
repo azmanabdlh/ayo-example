@@ -10,7 +10,12 @@ type MatchParam struct {
 	Title string `json:"title"`
 
 	HomeTeamID int64 `json:"home_team_id"`
+
+	HomeTeamFormation string `json:"home_team_formation"`
+
 	AwayTeamID int64 `json:"away_team_id"`
+
+	AwayTeamFormation string `json:"away_team_formation"`
 
 	HomeScore int `json:"home_score"`
 	AwayScore int `json:"away_score"`

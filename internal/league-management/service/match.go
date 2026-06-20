@@ -135,13 +135,71 @@ func (l *LeagueManagement) CreateMatch(ctx context.Context, matchParam dtos.Matc
 
 	err := gorm.G[model.Match](l.db).
 		Create(ctx, &model.Match{
-			Title:      matchParam.Title,
-			MatchDate:  matchParam.MatchDate,
-			HomeTeamID: matchParam.AwayTeamID,
-			AwayTeamID: matchParam.AwayTeamID,
-			VenueID:    matchParam.VenueID,
-			Phase:      1, // active
+			Title:             matchParam.Title,
+			MatchDate:         matchParam.MatchDate,
+			HomeTeamFormation: matchParam.HomeTeamFormation,
+			AwayTeamFormation: matchParam.AwayTeamFormation,
+			HomeTeamID:        matchParam.HomeTeamID,
+			AwayTeamID:        matchParam.AwayTeamID,
+			VenueID:           matchParam.VenueID,
+			// VenueName: TODO: add venue name snapshot,
+			Phase: 1, // active
 		})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (l *LeagueManagement) ModifyMatch(ctx context.Context, matchID int64, matchParam dtos.MatchParam) error {
+
+	data := make(map[string]interface{})
+
+	if !matchParam.MatchDate.IsZero() {
+		data["match_date"] = matchParam.MatchDate
+	}
+
+	if matchParam.HomeTeamID != 0 {
+		data["home_team_id"] = matchParam.HomeTeamID
+	}
+
+	if matchParam.AwayTeamID != 0 {
+		data["awayteam_id"] = matchParam.AwayTeamID
+	}
+
+	if matchParam.HomeScore != 0 {
+		data["home_score"] = matchParam.HomeScore
+	}
+
+	if matchParam.AwayScore != 0 {
+		data["away_scrore"] = matchParam.AwayScore
+	}
+
+	if matchParam.Phase != 0 {
+		data["phase"] = matchParam.Phase
+	}
+
+	if matchParam.Title != "" {
+		data["title"] = matchParam.Title
+	}
+
+	if matchParam.VenueID != 0 {
+		data["venue_id"] = matchParam.VenueID
+	}
+
+	if matchParam.HomeTeamFormation != "" {
+		data["home_team_formation"] = matchParam.HomeTeamFormation
+	}
+
+	if matchParam.AwayTeamFormation != "" {
+		data["away_team_formation"] = matchParam.AwayTeamFormation
+	}
+
+	_, err := gorm.G[map[string]interface{}](l.db).
+		Table("matches").
+		Where("id = ?", matchID).
+		Updates(ctx, data)
 	if err != nil {
 		return err
 	}

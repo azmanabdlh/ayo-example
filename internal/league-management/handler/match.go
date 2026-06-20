@@ -141,6 +141,42 @@ func (h *Handler) CreateMatch(c *gin.Context) {
 	})
 }
 
+func (h *Handler) ModifyMatch(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+
+	if err != nil || id < 1 {
+		c.JSON(400, gin.H{
+			"message": "invalid match_id",
+		})
+
+		return
+	}
+
+	var param dtos.MatchParam
+	if err := c.ShouldBindJSON(&param); err != nil {
+		logger.Info("error match param json: %v", err)
+
+		c.JSON(400, gin.H{
+			"message": err.Error(),
+		})
+
+		return
+	}
+
+	err = h.svc.ModifyMatch(c.Request.Context(), id, param)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": err.Error(),
+		})
+
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"message": "success to add match",
+	})
+}
+
 func (h *Handler) FindMatchHighlight(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 

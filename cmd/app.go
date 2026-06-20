@@ -107,6 +107,7 @@ func startApp(cfg *config.Config) error {
 		group.DELETE("/players/:id", h.RemovePlayer)
 
 		group.POST("/matches", l.CreateMatch)
+		group.PUT("/matches/:id", l.ModifyMatch)
 		group.POST("/matches/:id/goals", l.AddRecordGoal)
 		group.POST("/matches/:id/finish", l.Finish)
 

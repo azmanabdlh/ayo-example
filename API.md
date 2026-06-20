@@ -275,10 +275,11 @@ Token diambil dari respon endpoint `POST /api/login`.
   "match_date": "2026-07-01T15:00:00Z",
   "title": "Final Match",
   "home_team_id": 1,
+  "home_team_formation": "4-3-3",
+  "away_team_formation": "4-3-3",
   "away_team_id": 2,
   "home_score": 0,
   "away_score": 0,
-  "phase": 1,
   "venue_id": 1,
   "venue_name": "National Stadium"
 }
@@ -287,6 +288,35 @@ Token diambil dari respon endpoint `POST /api/login`.
 ```json
 {
   "message": "success to add match"
+}
+```
+
+
+### `PUT /api/matches/:id`
+- Deskripsi: Ubah data pertandingan.
+- Headers:
+  - `Content-Type: application/json`
+  - `Authorization: Bearer <jwt-token>`
+- Request payload:
+```json
+{
+  "match_date": "2026-07-01T15:00:00Z",
+  "title": "Final Match",
+  "home_team_id": 1,
+  "home_team_formation": "4-3-3",
+  "away_team_formation": "4-3-3",
+  "away_team_id": 2,
+  "home_score": 1,
+  "away_score": 2,
+  "phase": 1,
+  "venue_id": 1,
+  "venue_name": "National Stadium"
+}
+```
+- Response sukses contoh:
+```json
+{
+  "message": "success to modify match"
 }
 ```
 

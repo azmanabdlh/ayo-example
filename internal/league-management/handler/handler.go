@@ -9,6 +9,7 @@ import (
 
 type Service interface {
 	CreateMatch(ctx context.Context, matchParam dtos.MatchParam) error
+	ModifyMatch(ctx context.Context, matchID int64, matchParam dtos.MatchParam) error
 	FindMatchHighlight(ctx context.Context, matchID int64) (model.MatchHighlight, error)
 	AddRecordGoal(ctx context.Context, matchID int64, goalParam dtos.GoalParam) error
 	Finish(ctx context.Context, matchID int64) error

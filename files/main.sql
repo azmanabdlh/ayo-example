@@ -113,7 +113,7 @@ VALUES
 ('maman',174,69,'MIDFIELDER',22, 2),
 ('dian',174,69,'MIDFIELDER',21, 2),
 ('sandhika',174,69,'MIDFIELDER',23, 1),
-('hilman',174,69,'MIDFIELDER',20, 1),
+('hilman',174,69,'MIDFIELDER',20, 1);
 
 
 
