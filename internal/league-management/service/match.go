@@ -165,7 +165,7 @@ func (l *LeagueManagement) ModifyMatch(ctx context.Context, matchID int64, match
 	}
 
 	if matchParam.AwayTeamID != 0 {
-		data["awayteam_id"] = matchParam.AwayTeamID
+		data["away_team_id"] = matchParam.AwayTeamID
 	}
 
 	if matchParam.HomeScore != 0 {
