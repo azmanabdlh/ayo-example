@@ -108,7 +108,14 @@ VALUES
 
 ('Bruno Moreira',177,73,'FORWARD',10, 4),
 ('Dusan Stevanovic',186,85,'DEFENDER',5, 4),
-('Song Ui-young',174,69,'MIDFIELDER',7, 4);
+('Song Ui-young',174,69,'MIDFIELDER',7, 4),
+
+('maman',174,69,'MIDFIELDER',22, 2),
+('dian',174,69,'MIDFIELDER',21, 2),
+('sandhika',174,69,'MIDFIELDER',23, 1),
+('hilman',174,69,'MIDFIELDER',20, 1),
+
+
 
 -- ======================================
 -- PLAYER MEMBERSHIP
