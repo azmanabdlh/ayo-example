@@ -67,23 +67,26 @@ func (m *Match) CanRecordGoal(playerID, teamID int64) bool {
 		return false
 	}
 
-	// validTeamID && validPlayerID
-
-	return m.IsParticipating(teamID) &&
-		(m.IsHomePlayer(playerID) || m.IsAwayPlayer(playerID))
+	// TODO:
+	// 1. validate valid match teamID
+	// 2. validate valid player on this match
+	return m.ValidTeam(teamID) && m.HasPlayer(playerID)
 
 }
 
-func (m *Match) IsParticipating(teamID int64) bool {
+func (m *Match) HasPlayer(playerID int64) bool {
+	for _, player := range m.PlayerLineup {
+		isPlaying := player.ID == playerID && player.IsStarter
+		if isPlaying {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (m *Match) ValidTeam(teamID int64) bool {
 	return teamID == m.HomeTeamID || teamID == m.AwayTeamID
-}
-
-func (m *Match) IsHomePlayer(playerID int64) bool {
-	return m.HomeTeam.HasPlayerID(playerID)
-}
-
-func (m *Match) IsAwayPlayer(playerID int64) bool {
-	return m.AwayTeam.HasPlayerID(playerID)
 }
 
 func (m *Match) ToMatchHighlight() *MatchHighlight {
@@ -155,7 +158,7 @@ func newTeamHighlight(
 			player.MinuteOut = lineup.MinuteOut
 			player.IsStarter = lineup.IsStarter
 
-			player.SubstitutedForPlayerID = lineup.SubstitutedForPlayerID
+			player.SubstitutedForPlayerID = *lineup.SubstitutedForPlayerID
 			player.SubstitutedForPlayerName = lineup.SubstitutedForPlayer.Name
 
 			player.Reason = lineup.Reason
@@ -199,24 +202,24 @@ type MatchPlayerLineup struct {
 	ID int64 `json:"id,omitempty" gorm:"primaryKey"`
 
 	Match   Match `json:"match,omitempty"`
-	MatchID int64 `json:"match_id,omitempty" gorm:"foreignKey:MatchID"`
+	MatchID int64 `json:"match_id,omitempty" gorm:"foreignKey:MatchID;uniqueIndex:idx_match_team_player"`
 
 	Team   teamManagement.Team `json:"team,omitempty"`
-	TeamID int64               `json:"team_id,omitempty" gorm:"foreignKey:TeamID"`
+	TeamID int64               `json:"team_id,omitempty" gorm:"foreignKey:TeamID;uniqueIndex:idx_match_team_player" `
 
 	// ["ST", "GK", "CB-L"]
-	PositionSlot string `json:"position_slot,omitempty" gorm:"uniqueIndex:idx_position_slot_is_starter"`
+	PositionSlot string `json:"position_slot,omitempty"`
 
-	IsStarter bool `json:"is_starter,omitempty" gorm:"uniqueIndex:idx_position_slot_is_starter"`
+	IsStarter bool `json:"is_starter,omitempty"`
 
 	MinuteIn  int `json:"minute_in,omitempty"`
 	MinuteOut int `json:"minute_out,omitempty"`
 
 	Player   teamManagement.Player `json:"player,omitempty"`
-	PlayerID int64                 `json:"player_id,omitempty" gorm:"foreignKey:PlayerID"`
+	PlayerID int64                 `json:"player_id,omitempty" gorm:"foreignKey:PlayerID;uniqueIndex:idx_match_team_player"`
 
 	SubstitutedForPlayer   teamManagement.Player `json:"substituted_for_player,omitempty"`
-	SubstitutedForPlayerID int64                 `json:"substituted_for_player_id,omitempty" gorm:"foreignKey:SubstitutedForPlayerID"`
+	SubstitutedForPlayerID *int64                `json:"substituted_for_player_id,omitempty" gorm:"foreignKey:SubstitutedForPlayerID"`
 
 	Reason string `json:"reason,omitempty"`
 }

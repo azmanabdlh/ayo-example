@@ -526,6 +526,7 @@ Token diambil dari respon endpoint `POST /api/login`.
 ```json
 {
   "player_id": 10,
+  "team_id": 1,
   "scored_at_minute": 57
 }
 ```
@@ -560,7 +561,8 @@ Token diambil dari respon endpoint `POST /api/login`.
   "minute": 60,
   "player_id": 12,
   "substituted_for_player_id": 11,
-  "reason": "Injury"
+  "position_slot": "ST-L",
+  "reason": "Ganti dulu yah"
 }
 ```
 - Response sukses contoh:

@@ -51,7 +51,7 @@ func (l *LeagueManagement) AssignMatchPlayerLineup(ctx context.Context, matchID 
 		return errors.New("invalid match phase")
 	}
 
-	if !match.IsParticipating(req.TeamID) {
+	if !match.ValidTeam(req.TeamID) {
 		return errors.New("invalid teamID")
 	}
 
@@ -79,32 +79,38 @@ func (l *LeagueManagement) AssignMatchPlayerLineup(ctx context.Context, matchID 
 	// assign match players
 	// TODO: sync player lineups using upsert (insert new or update if already exists)
 
-	var matchPlayer []*model.MatchPlayerLineup
-	for _, player := range players {
-		lineup, _ := playerLineup[player.ID]
+	return l.db.Transaction(func(tx *gorm.DB) error {
+		for _, player := range players {
+			lineup, _ := playerLineup[player.ID]
 
-		matchPlayer = append(matchPlayer, &model.MatchPlayerLineup{
-			MatchID: matchID,
-			TeamID:  req.TeamID,
+			err = l.db.Clauses(clause.OnConflict{
+				Columns: []clause.Column{
+					{Name: "match_id"},
+					{Name: "team_id"},
+					{Name: "player_id"},
+				},
 
-			PositionSlot: lineup.PositionSlot,
-			IsStarter:    lineup.IsStarter,
-			PlayerID:     player.ID,
-		})
-	}
+				DoUpdates: clause.AssignmentColumns([]string{
+					"team_id",
+					"position_slot",
+					"is_starter",
+				}),
+			}).Create(&model.MatchPlayerLineup{
+				MatchID: matchID,
+				TeamID:  req.TeamID,
 
-	return l.db.Clauses(clause.OnConflict{
-		Columns: []clause.Column{
-			{Name: "match_id"},
-			{Name: "player_id"},
-		},
+				PositionSlot: lineup.PositionSlot,
+				IsStarter:    lineup.IsStarter,
+				PlayerID:     player.ID,
+			}).Error
 
-		DoUpdates: clause.AssignmentColumns([]string{
-			"team_id",
-			"position_slot",
-			"is_starter",
-		}),
-	}).Create(&matchPlayer).Error
+			if err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
 }
 
 func (l *LeagueManagement) Finish(ctx context.Context, matchID int64) error {
@@ -185,9 +191,8 @@ func (l *LeagueManagement) AddRecordGoal(ctx context.Context, matchID int64, req
 
 	err := l.db.
 		Preload("HomeTeam").
-		Preload("HomeTeam.Players").
 		Preload("AwayTeam").
-		Preload("AwayTeam.Players").
+		Preload("PlayerLineup").
 		First(&match, matchID).
 		Error
 

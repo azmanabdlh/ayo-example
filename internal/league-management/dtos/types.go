@@ -40,6 +40,7 @@ type SubstitutePlayerParam struct {
 	TeamID                 int64  `json:"team_id"`
 	Minute                 int    `json:"minute"`
 	PlayerID               int64  `json:"player_id"`
+	PositionSlot           string `json:"position_slot"`
 	SubstitutedForPlayerID int64  `json:"substituted_for_player_id"`
 	Reason                 string `json:"reason"`
 }
