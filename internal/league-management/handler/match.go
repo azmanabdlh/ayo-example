@@ -173,7 +173,7 @@ func (h *Handler) ModifyMatch(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{
-		"message": "success to add match",
+		"message": "success to modify match",
 	})
 }
 

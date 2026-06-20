@@ -165,7 +165,11 @@ func newTeamHighlight(
 
 			// set player lineup
 
-			position := slotCoordinates[lineup.PositionSlot]
+			// TODO: SET CORDINATE by team formation
+			position := newPlayerCoordinate(
+				lineup.PositionSlot,
+				formation,
+			)
 
 			x := position.X
 			// mirror position for away
@@ -194,6 +198,23 @@ func newTeamHighlight(
 		Player:               players,
 		PlayerLineupPosition: lineupPosition,
 	}
+}
+
+func newPlayerCoordinate(
+	positionSlot string,
+	teamFormation string,
+) struct {
+	X int
+	Y int
+} {
+
+	slot := slotCoordinates[positionSlot]
+	if positionSlot == "GK" {
+		return slot
+	}
+
+	// TODO: generate player coordinate by formation
+	return slot
 }
 
 type MatchPlayerLineup struct {
